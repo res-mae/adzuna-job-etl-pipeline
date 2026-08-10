@@ -40,9 +40,12 @@ def save_raw(data, folder=os.path.join("..", "data", "raw")):
         return
 
     try:
+        # Use a timestamp to keep each raw API response as a separate file.
         current_datetime = datetime.now().strftime("%Y%m%dT%H%M%S")
+
         os.makedirs(folder, exist_ok=True)
         filename = os.path.join(folder, f"adzuna_jobs_{current_datetime}.json")
+
         with open(filename, "w", encoding="utf-8") as f:
                     json.dump(data, f, indent=2)
         return filename
