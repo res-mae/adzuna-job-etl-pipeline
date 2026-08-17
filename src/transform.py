@@ -60,7 +60,6 @@ def clean_job(job):
         # Convert type from string to boolean
         "salary_is_predicted": bool(int(job["salary_is_predicted"])),
 
-        # Convert from string to datetime
         "created": job["created"],
 
         # Remove whitespace
