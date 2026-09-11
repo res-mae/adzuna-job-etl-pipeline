@@ -6,9 +6,11 @@
 # Raw and processed data
 data/raw/*
 data/processed/*
+data/rejected/*
 
 !data/raw/.gitkeep
 !data/processed/.gitkeep
+!data/rejected/.gitkeep
 
 # Python
 __pycache__/

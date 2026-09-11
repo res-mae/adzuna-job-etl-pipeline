@@ -60,7 +60,7 @@ def validate_job(job):
         if not cleaned.get("contract_type"):
             return False, "Missing `contract_type`"
 
-        # cast `salary_min` and `salary_max` to numeric
+        # Verify salary values are present and numeric
         try:
             cleaned["salary_min"] = float(cleaned.get("salary_min"))
             cleaned["salary_max"] = float(cleaned.get("salary_max"))

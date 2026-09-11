@@ -80,7 +80,7 @@ def transform(jobs):
             cleaned_jobs.append(cleaned)
 
         except Exception as e:
-            print(f"Failed to clean job {job.get("id", "unknown")}: {e}")
+            print(f"Failed to clean job {job.get('id', 'unknown')}: {e}")
             failed_count += 1
 
     print(f"Transformed {len(cleaned_jobs)}/{len(jobs)} records ({failed_count} failed)")

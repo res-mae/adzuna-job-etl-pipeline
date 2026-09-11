@@ -34,11 +34,12 @@ sample data pulled and inspected to reach this decision.*
 | `category.label` | nested string | Yes | Human-readable category, flatten → `category_label`. n=50: 96% "IT Jobs", 4% "Engineering Jobs" — low diversity, expected given role-specific search term. |
 | `category.tag` | nested string | Yes | Machine-readable slug, flatten → `category_tag`. Same distribution as label. |
 | `contract_time` | string | Yes | 60% missing (n = 50). Non-null values are clean (`full_time`, `part_time`). Fill missing with `"not_specified` in transform step rather than dropping rows |
+| `contract_type` | string | Yes | 70% missing (n=50, worse than `contract_time`'s 60%). Values: permanent (13), contract (2). Distinct dimension from `contract_time` (employment basis vs. hours). Fill missing with "not_specified", same pattern as `contract_time`. Given majority missing, findings should be reported as "of postings that specify, X% are permanent" — not treated as representative of the full market. |
 | `salary_min` | float | Yes | 0% missing (n=50). Often equals `salary_max` |
 | `salary_max` | float | Yes | 0% missing (n=50). Often equals `salary_min` |
 | `salary_is_predicted` | string (0/1) | Yes | **Critical field** — raw value is a string. Must cast via int first then boolean. Distinguishes real employer-stated salaries from Adzuna's estimates. |
 | `description` | string | Yes | **Hard-capped at exactly 500 characters by the API (confirmed: mean=500, std=0, n=50)** — not natural text length, a fixed truncation limit. Ends mid-sentence, often before reaching role/skill content. Not used in current analysis questions. Kept for potential future use (full-description fetch via `redirect_url`) — not relied upon for any current field. |
-| `created` | string | Yes | Parses cleanly with `pandas.to_datetime()` |
+| `created` | string | Yes | Parsed with Python's `datetime.fromisoformat()` |
 | `latitude` / `longitude` | float | Maybe | Not needed for current questions; kept optionally for a future map view |
 | `adref` | string | No | Adzuna internal reference token |
 | `__CLASS__` | string | No | Adzuna internal metadata |
@@ -52,6 +53,7 @@ sample data pulled and inspected to reach this decision.*
 - Missing salary_min: 0%
 - Missing salary_max: 0%
 - Missing contract_time: 60%
+- Missing contract_type: 70%
 - % of records where `salary_is_predicted` = 1: 44%
 - Any duplicate `id`s across pages/pulls: 0
 - Category distribution: 96% "IT Jobs" (48), 4% "Engineering Jobs" (2). 
@@ -75,6 +77,7 @@ location_name       TEXT
 category_label      TEXT
 category_tag        TEXT
 contract_time       TEXT
+contract_type       TEXT
 salary_min          NUMERIC
 salary_max          NUMERIC
 salary_is_predicted BOOLEAN
@@ -97,6 +100,7 @@ description         TEXT      -- kept, not used in current analysis
   in analysis.
 - `contract_time` is missing on 60% of postings (n=50) — filled as 
   "not_specified" rather than dropped; treat as a data gap, not signal.
+- `contract_type` is missing on 70% of postings (n=50) — even higher than `contract_time`. Of the 30% that specify a value, most are "permanent" (13) vs. "contract" (2), but this sample is too small to generalize. Filled as "not_specified" rather than dropped; treat any contract-type finding as describing only the subset of postings that disclosed it, not the full market.
 - Title matching is keyword-based (title + description), not exact — 
   produced minimal noise in practice (2%, n=50), so light filtering was 
   sufficient rather than heavy normalization.
