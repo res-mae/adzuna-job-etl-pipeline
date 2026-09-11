@@ -17,7 +17,7 @@ adding `title_only` param to tighten results; decided to keep full search and
 handle title cleanup in `transform.py` instead, since real-world postings are
 messy anyway.
 
-*See [`exploration/inspect_api_response.py`](../exploration/inspect_api_response.py) for the
+*See [`notebooks/exploration.ipynb`](../notebooks/exploration.ipynb) for the
 sample data pulled and inspected to reach this decision.*
 
 ---
