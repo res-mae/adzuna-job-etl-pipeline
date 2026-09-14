@@ -3,6 +3,7 @@ import json
 import os
 from dotenv import load_dotenv
 from datetime import datetime
+from pathlib import Path
 
 load_dotenv()
 APP_ID = os.getenv("ADZUNA_APP_ID")
@@ -10,6 +11,9 @@ APP_KEY = os.getenv("ADZUNA_APP_KEY")
 
 if not APP_ID or not APP_KEY:
     raise ValueError("Adzuna API credentials are missing.")
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+RAW_FOLDER = PROJECT_ROOT / "data" / "raw"
 
 def fetch_jobs(country="gb", what="data engineer", results_per_page=50):
     try:
@@ -34,7 +38,7 @@ def fetch_jobs(country="gb", what="data engineer", results_per_page=50):
         return response.json()
 
 
-def save_raw(data, folder=os.path.join("..", "data", "raw")):
+def save_raw(data, folder=RAW_FOLDER):
     if data is None:
         print("No data to save - skipping.")
         return
