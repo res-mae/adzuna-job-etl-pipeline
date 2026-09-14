@@ -183,30 +183,37 @@ def bulk_insert(valid_rows, db_config=DB_CONFIG):
             conn.close()
 
 
-if __name__ == "__main__":
+def run_load():
     try:
         latest_processed_file = get_latest_processed_file()
         job_records = read_processed(latest_processed_file)
 
     except FileNotFoundError as e:
         print(f"No data to load: {e}")
+        return False
 
     except ValueError as e:
-            print(f"No data to load: {e}")
+        print(f"No data to load: {e}")
+        return False
+    
+    valid_job_records, invalid_job_records = split_valid_invalid(job_records)
 
+    inserted_records = False
+
+    if not valid_job_records:
+        print("No records were successfully validated - nothing to load.")
     else:
-        valid_job_records, invalid_job_records = split_valid_invalid(job_records)
-
-        if not valid_job_records:
-            print("No records were successfully validated - nothing to load.")
+        inserted_records = bulk_insert(valid_job_records)
+        if inserted_records:
+            print("Job records were successfully inserted to the database")
         else:
-            inserted_records = bulk_insert(valid_job_records)
+            print("No records were inserted to the database")
+            
+    if invalid_job_records:
+        error_log = log_invalid(invalid_job_records)
+        print(f"See error log for invalid job records: {error_log}")
 
-            if inserted_records:
-                print("Job records were successfully inserted to the database")
-            else:
-                print("No records were inserted to the database")
-                
-        if invalid_job_records:
-            error_log = log_invalid(invalid_job_records)
-            print(f"See error log for invalid job records: {error_log}")
+    return inserted_records
+
+if __name__ == "__main__":
+    run_load()

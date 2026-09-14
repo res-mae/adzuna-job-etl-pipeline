@@ -57,12 +57,18 @@ def save_raw(data, folder=RAW_FOLDER):
             print(f"Error occurred: {error}")
             return None
 
-if __name__ == "__main__":
+def run_extract():
     data = fetch_jobs()
     
     if data is not None:
         saved_file = save_raw(data)
         if saved_file:
             print(f"Saved to {saved_file}")
+            return True
     else:
         print("Fetch failed - nothing to save.")
+        return False
+     
+
+if __name__ == "__main__":
+    run_extract()

@@ -113,28 +113,35 @@ def save_processed(cleaned_jobs, folder=PROCESSED_FOLDER):
         print(f"Error occurred while saving: {e}")
         return None
 
-
-if __name__ == "__main__":
+def run_transform():
     try:
         latest_file = get_latest_raw_file()
         raw_jobs = load_raw(latest_file)
 
     except FileNotFoundError as e:
         print(f"No data to process: {e}")
+        return False
 
     except ValueError as e:
         print(f"Could not read raw data: {e}")
+        return False
 
     else:
         cleaned_jobs = transform(raw_jobs)
 
         if not cleaned_jobs:
             print("No records were successfully cleaned - nothing to save.")
+            return False
         else:
             saved_path = save_processed(cleaned_jobs)
 
             if saved_path is not None:
                 print(f"Processed data saved to: {saved_path}")
+                return True
             else:
                 print("Transform succeeded, but saving failed.")
+                return False
+   
 
+if __name__ == "__main__":
+    run_transform()
