@@ -3,9 +3,11 @@ import os
 import glob
 from datetime import datetime
 import csv
+from pathlib import Path
 
-RAW_FOLDER = os.path.join("..", "data", "raw")
-PROCESSED_FOLDER = os.path.join("..", "data", "processed")
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+RAW_FOLDER = PROJECT_ROOT / "data" / "raw"
+PROCESSED_FOLDER = PROJECT_ROOT / "data" / "processed"
 
 def get_latest_raw_file(folder=RAW_FOLDER):
     

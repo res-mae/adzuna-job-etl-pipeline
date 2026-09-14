@@ -5,11 +5,13 @@ import psycopg2
 from psycopg2.extras import execute_values
 from dotenv import load_dotenv
 from datetime import datetime
+from pathlib import Path
 
 load_dotenv()
 
-PROCESSED_FOLDER = os.path.join("..", "data", "processed")
-REJECTED_FOLDER = os.path.join("..", "data", "rejected")
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+PROCESSED_FOLDER = PROJECT_ROOT / "data" / "processed"
+REJECTED_FOLDER = PROJECT_ROOT / "data" / "rejected"
 
 DB_CONFIG = {
     "host": os.getenv("DB_HOST"),
